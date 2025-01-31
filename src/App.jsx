@@ -1,0 +1,71 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { QuestionItem } from './components/QuestionItem';
+import './App.css'; // Импортируем стили для App
+import { NewQuestion } from './components/NewQuestion';
+
+const URL = 'http://localhost:3005/';
+
+function App() {
+	const [questions, setQuestions] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+
+	useEffect(() => {
+		const fetchQuestions = async () => {
+			try {
+				const response = await axios.get(URL);
+				setQuestions(response.data.questions);
+			} catch (error) {
+				setError(error.message);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchQuestions();
+	}, []);
+
+	const handleRemoveQuestion = async (id) => {
+		try {
+			await axios.delete(`http://localhost:3005/${id}`);
+			setQuestions(questions.filter((question) => question._id !== id));
+		} catch (error) {
+			console.error('Ошибка при удалении вопроса:', error);
+		}
+	};
+
+	const handleEditQuestion = async (id, newTitle, newAnswers) => {
+		await axios.put(`${URL}${id}`, { title: newTitle, answers: newAnswers });
+		setQuestions(
+			questions.map((question) =>
+				question._id === id ? { ...question, title: newTitle, answers: newAnswers } : question,
+			),
+		);
+	};
+
+	const handleAddNewQuestion = (newQuestion) => {
+		setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+	};
+
+	if (loading) return <h3>Загрузка...</h3>;
+	if (error) return <h3>Ошибка: {error}</h3>;
+
+	return (
+		<div className="app">
+			<NewQuestion onAddNewQuestion={handleAddNewQuestion} />
+			<h1 className="app__title">Список вопросов</h1>
+			<ul className="app__list">
+				{questions.map((question) => (
+					<QuestionItem
+						key={question._id}
+						question={question}
+						onRemove={handleRemoveQuestion}
+						onEdit={handleEditQuestion}
+					/>
+				))}
+			</ul>
+		</div>
+	);
+}
+
+export default App;

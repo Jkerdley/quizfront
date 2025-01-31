@@ -1,0 +1,16 @@
+.app {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 16px;
+}
+
+.app__title {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 16px;
+}
+
+.app__list {
+	list-style-type: none;
+	padding: 0;
+}
