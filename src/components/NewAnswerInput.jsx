@@ -10,13 +10,15 @@ export const NewAnswerInput = ({ answer, answers, setAnswers, index }) => {
 		const updatedAnswers = answers.filter((_, i) => i !== index); // Удаляем ответ по индексу
 		setAnswers(updatedAnswers);
 	};
+
 	return (
 		<div key={answer._id} className="answers-items_indedit-container">
 			<input
 				name="answer"
 				className="new-question-answer-item__input"
 				type="text"
-				required={true}
+				required
+				pattern=".*\S+.*"
 				placeholder="Введите вариант ответа"
 				value={answer.title} // Используем title из объекта
 				onChange={(e) => handleNewAnswerChange(index, e.target.value)}

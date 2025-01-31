@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import './styles/NewQuestion.css';
 import axios from 'axios';
-import { InputCheckbox } from './InputCheckbox';
+import { NewAnswerInput } from './NewAnswerInput';
+import { AddNewAnswerButton } from './AddNewAnswerButton';
 
 const URL = 'http://localhost:3005/';
 
@@ -27,21 +28,6 @@ export function NewQuestion({ onAddNewQuestion }) {
 		}
 	};
 
-	const handleAddNewAnswer = () => {
-		setAnswers([...answers, { title: '', isTrueAnswer: false }]); // Добавляем новый объект с пустым title
-	};
-
-	const handleNewAnswerChange = (index, value) => {
-		const updatedAnswers = [...answers];
-		updatedAnswers[index].title = value; // Обновляем title в объекте по индексу
-		setAnswers(updatedAnswers);
-	};
-
-	const handleDeleteNewAnswer = (index) => {
-		const updatedAnswers = answers.filter((_, i) => i !== index); // Удаляем ответ по индексу
-		setAnswers(updatedAnswers);
-	};
-
 	return (
 		<div className="new-question-item">
 			<div className="new-question-item__input_title_container">
@@ -49,7 +35,9 @@ export function NewQuestion({ onAddNewQuestion }) {
 					name="question"
 					className="new-question-item__input"
 					type="text"
-					placeholder="Введите вопрос"
+					required
+					pattern=".*\S+.*"
+					placeholder="Введите новый вопрос"
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
 				/>
@@ -59,33 +47,15 @@ export function NewQuestion({ onAddNewQuestion }) {
 			</div>
 			<div className="new-question-item__answers-container">
 				{answers.map((answer, index) => (
-					<div key={index} className="new-question-item__answer-and-removebutton">
-						<input
-							name="answer"
-							className="new-question-answer-item__input"
-							type="text"
-							placeholder="Введите вариант ответа"
-							value={answer.title} // Используем title из объекта
-							onChange={(e) => handleNewAnswerChange(index, e.target.value)}
-						/>
-						<InputCheckbox
-							index={index}
-							answers={answers}
-							setAnswers={setAnswers}
-							answer={answer}
-						/>
-						<label>Ответ правильный?</label>
-						<button
-							className="new-question-item__remove-button"
-							onClick={() => handleDeleteNewAnswer(index)} // Передаем индекс для удаления
-						>
-							Удалить
-						</button>
-					</div>
+					<NewAnswerInput
+						key={answer._id}
+						index={index}
+						answer={answer}
+						answers={answers}
+						setAnswers={setAnswers}
+					/>
 				))}
-				<button className="new-question-item__button" onClick={handleAddNewAnswer}>
-					+ Добавить вариант ответа
-				</button>
+				<AddNewAnswerButton setAnswers={setAnswers} answers={answers} />
 			</div>
 		</div>
 	);

@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { QuestionItem } from './components/QuestionItem';
-import './App.css'; // Импортируем стили для App
-import { NewQuestion } from './components/NewQuestion';
+import '../pages/styles/EditPage.css';
+import { NewQuestion, QuestionItem } from '../components';
+import { Link } from 'react-router-dom';
 
 const URL = 'http://localhost:3005/';
 
-function App() {
+export function EditPage() {
 	const [questions, setQuestions] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -53,6 +53,9 @@ function App() {
 
 	return (
 		<div className="app">
+			<Link to="/">
+				<button className="question-item__button">Вернуться на главную</button>
+			</Link>
 			<NewQuestion onAddNewQuestion={handleAddNewQuestion} />
 			{/* Передаем функцию для добавления вопроса */}
 			<h1 className="app__title">Список вопросов</h1>
@@ -69,5 +72,3 @@ function App() {
 		</div>
 	);
 }
-
-export default App;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './styles/QuestionItem.css'; // Импортируем стили для QuestionItem
 import { CorrectAnswerIndicator } from './CorrectAnswerIndicator';
 import { NewAnswerInput } from './NewAnswerInput';
+import { AddNewAnswerButton } from './AddNewAnswerButton';
 
 export function QuestionItem({ question, onRemove, onEdit }) {
 	const [isEditing, setIsEditing] = useState(false);
@@ -11,16 +12,6 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 	const handleSave = () => {
 		onEdit(question._id, newTitle, answers);
 		setIsEditing(false);
-	};
-
-	const handleAnswerChange = (index, newValue) => {
-		const updatedAnswers = [...answers];
-		updatedAnswers[index].title = newValue;
-		setAnswers(updatedAnswers);
-	};
-
-	const handleAddNewAnswer = () => {
-		setAnswers([...answers, { title: '', isTrueAnswer: false }]); // Добавляем новый объект с пустым title
 	};
 
 	return (
@@ -44,11 +35,9 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 								setAnswers={setAnswers}
 							/>
 						))}
-						<button className="new-question-item__button" onClick={handleAddNewAnswer}>
-							+ Добавить вариант ответа
-						</button>
+						<AddNewAnswerButton setAnswers={setAnswers} answers={answers} />
 					</div>
-					<div className="question-item__edit-buttons-conteiner">
+					<div className="question-item__edit-buttons-container">
 						<button className="question-item__button" onClick={handleSave}>
 							Сохранить
 						</button>
@@ -64,7 +53,7 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 				<>
 					<div className="question-item__header">
 						<span className="question-item__title">{question.title}</span>
-						<div className="question-item__save-buttons-conteiner">
+						<div className="question-item__edit-buttons-container">
 							<button className="question-item__button" onClick={() => setIsEditing(true)}>
 								Редактировать
 							</button>
