@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles/QuestionItem.css'; // Импортируем стили для QuestionItem
 
 export function QuestionItem({ question, onRemove, onEdit }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [newTitle, setNewTitle] = useState(question.title);
-	const [answers, setAnswers] = useState(question.answers);
-	console.log('question answers in list', answers);
+	const [answers, setAnswers] = useState([]);
+
 	console.log('question in list', question);
+
+	useEffect(() => {
+		setAnswers(question.answers || []);
+	}, [question]);
 
 	const handleSave = () => {
 		onEdit(question._id, newTitle, answers);
@@ -32,7 +36,7 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 
 					<div>
 						{answers.map((answer, index) => (
-							<div key={answer.id} className="flex items-center gap-2 mb-2">
+							<div key={answer._id} className="flex items-center gap-2 mb-2">
 								<input
 									className="question-item__input"
 									type="text"
@@ -72,7 +76,7 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 					</div>
 					<div>
 						{answers.map((answer, index) => (
-							<div key={answer.id} className="flex items-center gap-2 mb-2">
+							<div key={answer._id} className="flex items-center gap-2 mb-2">
 								<p className="question-text">{answer.title}</p>
 							</div>
 						))}

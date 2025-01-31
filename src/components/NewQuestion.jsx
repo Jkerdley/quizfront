@@ -6,37 +6,33 @@ const URL = 'http://localhost:3005/';
 
 export function NewQuestion({ onAddNewQuestion }) {
 	const [title, setTitle] = useState(''); // Заголовок вопроса
-	const [answers, setAnswers] = useState([{ title: '' }]); // Массив ответов, инициализируем с пустой строкой
+	const [answers, setAnswers] = useState([{ title: '', isTrueAnswer: false }]); // Инициализируем с пустым объектом
 
 	const handleSave = async () => {
 		const question = {
 			title,
-			answers: answers.map((answer, index) => ({
-				id: (index + 1).toString(),
+			answers: answers.map((answer) => ({
 				title: answer.title,
-				isTrueAnswer: answer.isTrueAnswer, // По умолчанию устанавливаем false
+				isTrueAnswer: answer.isTrueAnswer, // Устанавливаем значение isTrueAnswer
 			})),
 		};
 		try {
 			const response = await axios.post(URL, question); // Отправляем POST запрос на сервер
-			console.log('response.data', response.data);
-
-			onAddNewQuestion(response.data);
+			onAddNewQuestion(response.data); // Вызываем функцию для обновления списка вопросов
 			setTitle(''); // Сбрасываем заголовок
-			setAnswers(['']); // Сбрасываем массив ответов
+			setAnswers([{ title: '', isTrueAnswer: false }]); // Сбрасываем массив ответов
 		} catch (error) {
 			console.error('Ошибка при добавлении вопроса:', error);
 		}
 	};
 
 	const handleAddNewAnswer = () => {
-		setAnswers([...answers, { title: '' }]); // Добавляем пустую строку для нового ответа
+		setAnswers([...answers, { title: '', isTrueAnswer: false }]); // Добавляем новый объект с пустым title
 	};
 
 	const handleNewAnswerChange = (index, value) => {
 		const updatedAnswers = [...answers];
-		console.log('updated answers', updatedAnswers);
-		updatedAnswers[index].title = value; // Обновляем текст ответа по индексу
+		updatedAnswers[index].title = value; // Обновляем title в объекте по индексу
 		setAnswers(updatedAnswers);
 	};
 

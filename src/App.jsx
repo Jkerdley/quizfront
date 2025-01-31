@@ -11,6 +11,11 @@ function App() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
+	// Функция для добавления нового вопроса
+	const handleAddNewQuestion = (newQuestions) => {
+		setQuestions(() => [...newQuestions]);
+	};
+
 	useEffect(() => {
 		const fetchQuestions = async () => {
 			try {
@@ -43,27 +48,25 @@ function App() {
 		);
 	};
 
-	const handleAddNewQuestion = (newQuestion) => {
-		setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
-	};
-
 	if (loading) return <h3>Загрузка...</h3>;
 	if (error) return <h3>Ошибка: {error}</h3>;
 
 	return (
 		<div className="app">
 			<NewQuestion onAddNewQuestion={handleAddNewQuestion} />
+			{/* Передаем функцию для добавления вопроса */}
 			<h1 className="app__title">Список вопросов</h1>
-			<ul className="app__list">
+			<div className="app__list">
 				{questions.map((question) => (
 					<QuestionItem
+						questions={questions}
 						key={question._id}
 						question={question}
 						onRemove={handleRemoveQuestion}
 						onEdit={handleEditQuestion}
 					/>
 				))}
-			</ul>
+			</div>
 		</div>
 	);
 }
