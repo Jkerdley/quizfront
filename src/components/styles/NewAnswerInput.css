@@ -1,0 +1,15 @@
+.new-question-answer-item__input {
+	display: flex;
+	width: 56%;
+	padding: 4px 12px;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #212529;
+	background-color: #fff;
+	border: 1px solid #ced4da;
+	appearance: none;
+	border-radius: 4px;
+	transition:
+		border-color 0.15s ease-in-out,
+		box-shadow 0.15s ease-in-out;
+}

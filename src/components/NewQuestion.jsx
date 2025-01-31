@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import './styles/NewQuestion.css'; // Импортируем стили для NewQuestion
+import './styles/NewQuestion.css';
 import axios from 'axios';
+import { InputCheckbox } from './InputCheckbox';
 
 const URL = 'http://localhost:3005/';
 
@@ -41,14 +42,6 @@ export function NewQuestion({ onAddNewQuestion }) {
 		setAnswers(updatedAnswers);
 	};
 
-	const handleAnswerCheckboxChange = (index) => {
-		const updatedAnswers = answers.map((answer, i) => ({
-			title: answer.title, // Сохраняем текущее значение title
-			isTrueAnswer: i === index, // Устанавливаем true для выбранного ответа
-		}));
-		setAnswers(updatedAnswers); // Обновляем состояние
-	};
-
 	return (
 		<div className="new-question-item">
 			<div className="new-question-item__input_title_container">
@@ -71,14 +64,15 @@ export function NewQuestion({ onAddNewQuestion }) {
 							name="answer"
 							className="new-question-answer-item__input"
 							type="text"
-							placeholder="Введите ответ"
+							placeholder="Введите вариант ответа"
 							value={answer.title} // Используем title из объекта
 							onChange={(e) => handleNewAnswerChange(index, e.target.value)}
 						/>
-						<input
-							type="checkbox"
-							className="new-question-item__checkbox"
-							onChange={() => handleAnswerCheckboxChange(index)}
+						<InputCheckbox
+							index={index}
+							answers={answers}
+							setAnswers={setAnswers}
+							answer={answer}
 						/>
 						<label>Ответ правильный?</label>
 						<button

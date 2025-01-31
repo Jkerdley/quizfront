@@ -59,9 +59,9 @@
 	box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
 }
 
-.new-question-answer-item__input {
+/* .new-question-answer-item__input {
 	display: flex;
-	width: 60%;
+	width: 56%;
 	padding: 4px 12px;
 	font-size: 16px;
 	line-height: 1.5;
@@ -73,7 +73,7 @@
 	transition:
 		border-color 0.15s ease-in-out,
 		box-shadow 0.15s ease-in-out;
-}
+} */
 
 .new-question-answer-item__input:focus {
 	color: #3391ee;
@@ -134,9 +134,8 @@
 	box-shadow: inset 0 6px 20px rgba(0, 51, 109, 0.55);
 }
 
-/* src/styles/NewQuestion.css */
 .new-question-item__checkbox {
-	width: 24px; /* Увеличиваем ширину чекбокса */
-	height: 24px; /* Увеличиваем высоту чекбокса */
-	cursor: pointer; /* Указатель при наведении */
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { QuestionItem } from './components/QuestionItem';
 import './App.css'; // Импортируем стили для App
@@ -12,9 +12,9 @@ function App() {
 	const [error, setError] = useState(null);
 
 	// Функция для добавления нового вопроса
-	const handleAddNewQuestion = (newQuestions) => {
+	const handleAddNewQuestion = useCallback((newQuestions) => {
 		setQuestions(() => [...newQuestions]);
-	};
+	}, []);
 
 	useEffect(() => {
 		const fetchQuestions = async () => {
@@ -59,7 +59,6 @@ function App() {
 			<div className="app__list">
 				{questions.map((question) => (
 					<QuestionItem
-						questions={questions}
 						key={question._id}
 						question={question}
 						onRemove={handleRemoveQuestion}

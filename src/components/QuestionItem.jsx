@@ -1,16 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './styles/QuestionItem.css'; // Импортируем стили для QuestionItem
+import { CorrectAnswerIndicator } from './CorrectAnswerIndicator';
+import { NewAnswerInput } from './NewAnswerInput';
 
 export function QuestionItem({ question, onRemove, onEdit }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [newTitle, setNewTitle] = useState(question.title);
-	const [answers, setAnswers] = useState([]);
-
-	console.log('question in list', question);
-
-	useEffect(() => {
-		setAnswers(question.answers || []);
-	}, [question]);
+	const [answers, setAnswers] = useState(question.answers);
 
 	const handleSave = () => {
 		onEdit(question._id, newTitle, answers);
@@ -23,28 +19,34 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 		setAnswers(updatedAnswers);
 	};
 
+	const handleAddNewAnswer = () => {
+		setAnswers([...answers, { title: '', isTrueAnswer: false }]); // Добавляем новый объект с пустым title
+	};
+
 	return (
 		<li className="question-item">
 			{isEditing ? (
 				<div className="question-item__edit-mode">
 					<input
 						type="text"
-						className="question-item__input"
+						className="question-item__input--title"
 						value={newTitle}
 						onChange={(e) => setNewTitle(e.target.value)}
 					/>
 
-					<div>
+					<div className="inedit-container">
 						{answers.map((answer, index) => (
-							<div key={answer._id} className="flex items-center gap-2 mb-2">
-								<input
-									className="question-item__input"
-									type="text"
-									value={answer.title}
-									onChange={(e) => handleAnswerChange(index, e.target.value)}
-								/>
-							</div>
+							<NewAnswerInput
+								key={answer._id}
+								index={index}
+								answer={answer}
+								answers={answers}
+								setAnswers={setAnswers}
+							/>
 						))}
+						<button className="new-question-item__button" onClick={handleAddNewAnswer}>
+							+ Добавить вариант ответа
+						</button>
 					</div>
 					<div className="question-item__edit-buttons-conteiner">
 						<button className="question-item__button" onClick={handleSave}>
@@ -76,8 +78,9 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 					</div>
 					<div>
 						{answers.map((answer, index) => (
-							<div key={answer._id} className="flex items-center gap-2 mb-2">
+							<div key={answer._id} className="answer-in-list">
 								<p className="question-text">{answer.title}</p>
+								<CorrectAnswerIndicator isTrueAnswer={answer.isTrueAnswer} />
 							</div>
 						))}
 					</div>
