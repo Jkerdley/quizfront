@@ -7,7 +7,6 @@ export const ClearStorageButton = () => {
 			clearQuizHistory();
 			window.location.reload();
 		}
-		clearQuizHistory();
 	};
 
 	return (

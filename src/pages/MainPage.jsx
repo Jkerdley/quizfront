@@ -17,7 +17,7 @@ export const MainPage = () => {
 					Редактировать тест
 				</LinkButton>
 			</div>
-			{isThereAnyHistory && (
+			{isThereAnyHistory.length !== 0 && (
 				<>
 					<StoryQuizContainer />
 					<ClearStorageButton />
