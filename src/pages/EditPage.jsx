@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../pages/styles/EditPage.css';
 import { NewQuestion, QuestionItem } from '../components';
 import { Link } from 'react-router-dom';
+import { useFetchQuestions } from '../hooks/useFetchQuestions';
 
 const URL = 'http://localhost:3005/';
 
@@ -11,23 +12,11 @@ export function EditPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
+	useFetchQuestions(setQuestions, setError, setLoading);
+
 	// Функция для добавления нового вопроса
 	const handleAddNewQuestion = useCallback((newQuestions) => {
 		setQuestions(() => [...newQuestions]);
-	}, []);
-
-	useEffect(() => {
-		const fetchQuestions = async () => {
-			try {
-				const response = await axios.get(URL);
-				setQuestions(response.data.questions);
-			} catch (error) {
-				setError(error.message);
-			} finally {
-				setLoading(false);
-			}
-		};
-		fetchQuestions();
 	}, []);
 
 	const handleRemoveQuestion = async (id) => {
@@ -48,8 +37,18 @@ export function EditPage() {
 		);
 	};
 
-	if (loading) return <h3>Загрузка...</h3>;
-	if (error) return <h3>Ошибка: {error}</h3>;
+	if (loading)
+		return (
+			<div className="edit-page__loader-container">
+				<h3>Загрузка...</h3>
+			</div>
+		);
+	if (error)
+		return (
+			<div className="edit-page__loader-container">
+				<h3>Ошибка: {error}</h3>
+			</div>
+		);
 
 	return (
 		<div className="app">
@@ -60,14 +59,18 @@ export function EditPage() {
 			{/* Передаем функцию для добавления вопроса */}
 			<h1 className="app__title">Список вопросов</h1>
 			<div className="app__list">
-				{questions.map((question) => (
-					<QuestionItem
-						key={question._id}
-						question={question}
-						onRemove={handleRemoveQuestion}
-						onEdit={handleEditQuestion}
-					/>
-				))}
+				{questions.map((question) => {
+					let isDeleteDisabled = questions.length < 2 ? true : false;
+					return (
+						<QuestionItem
+							key={question._id}
+							question={question}
+							onRemove={handleRemoveQuestion}
+							onEdit={handleEditQuestion}
+							isDisabled={isDeleteDisabled}
+						/>
+					);
+				})}
 			</div>
 		</div>
 	);

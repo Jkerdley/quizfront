@@ -1,0 +1,14 @@
+.quiz-cointainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2em;
+	height: 100vh;
+}
+.quiz-buttons-cointainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1em;
+}

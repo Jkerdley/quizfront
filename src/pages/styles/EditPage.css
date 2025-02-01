@@ -14,6 +14,16 @@
 }
 
 .app__list {
+	display: flex;
+	flex-direction: column;
 	list-style-type: none;
 	padding: 0;
+	gap: 10px;
+}
+.edit-page__loader-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100%;
 }

@@ -4,7 +4,7 @@ import { CorrectAnswerIndicator } from './CorrectAnswerIndicator';
 import { NewAnswerInput } from './NewAnswerInput';
 import { AddNewAnswerButton } from './AddNewAnswerButton';
 
-export function QuestionItem({ question, onRemove, onEdit }) {
+export function QuestionItem({ question, onRemove, onEdit, isDisabled }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [newTitle, setNewTitle] = useState(question.title);
 	const [answers, setAnswers] = useState(question.answers);
@@ -60,6 +60,7 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 							<button
 								className="question-item__button question-item__button--remove"
 								onClick={() => onRemove(question._id)}
+								disabled={isDisabled}
 							>
 								&times;
 							</button>
@@ -68,7 +69,9 @@ export function QuestionItem({ question, onRemove, onEdit }) {
 					<div>
 						{answers.map((answer, index) => (
 							<div key={answer._id} className="answer-in-list">
-								<p className="question-text">{answer.title}</p>
+								<ul>
+									<li className="question-text">{answer.title}</li>
+								</ul>
 								<CorrectAnswerIndicator isTrueAnswer={answer.isTrueAnswer} />
 							</div>
 						))}

@@ -99,3 +99,6 @@
 	height: 24px;
 	cursor: pointer;
 }
+.new-question-item__checkbox:checked {
+	background-color: #4caf50;
+}

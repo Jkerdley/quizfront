@@ -4,3 +4,6 @@ export * from './CorrectAnswerIndicator.jsx';
 export * from './InputCheckbox.jsx';
 export * from './NewAnswerInput.jsx';
 export * from './AddNewAnswerButton.jsx';
+export * from './StoryQuizContainer.jsx';
+export * from './LinkButton.jsx';
+export * from './QuestionWithAnswersComponent.jsx';

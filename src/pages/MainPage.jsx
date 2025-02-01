@@ -1,14 +1,21 @@
-import { Link } from 'react-router-dom';
+import './styles/MainPage.css';
+import { StoryQuizContainer, LinkButton } from '../components';
+import { useState } from 'react';
+import { ClearStorageButton } from '../components/ClearStorageButton';
 export const MainPage = () => {
 	return (
-		<div>
-			<h1>Hello MAIN</h1>
-			<Link to="/edit">
-				<button className="question-item__button">Редактировать вопросы</button>
-			</Link>
-			<Link to="/quiz">
-				<button className="question-item__button">Начать тестирование</button>
-			</Link>
+		<div className="mainpage-cointainer">
+			<h1>Welcome to QUIZ</h1>
+			<div className="mainpage-buttons-cointainer">
+				<LinkButton to={'/quiz'} className={'question-item__button mainpage-begin-button'}>
+					Запустить тест
+				</LinkButton>
+				<LinkButton to={'/edit'} className={'question-item__button mainpage-edit-button'}>
+					Редактировать тест
+				</LinkButton>
+			</div>
+			<StoryQuizContainer />
+			<ClearStorageButton />
 		</div>
 	);
 };
