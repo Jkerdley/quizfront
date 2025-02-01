@@ -48,7 +48,7 @@ export function NewQuestion({ onAddNewQuestion }) {
 			<div className="new-question-item__answers-container">
 				{answers.map((answer, index) => (
 					<NewAnswerInput
-						key={answer._id}
+						key={index}
 						index={index}
 						answer={answer}
 						answers={answers}
