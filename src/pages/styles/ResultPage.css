@@ -1,0 +1,42 @@
+.results-page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	height: 100vh;
+}
+.resultpage-buttons-cointainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2em;
+}
+.resultpage-tomainpage-button {
+	background: #00b47e;
+	height: 4em;
+	padding: 0 2em;
+	font-size: medium;
+}
+.resultpage-repeattest-button {
+	background: #534170;
+	height: 4em;
+	padding: 0 2em;
+	font-size: medium;
+}
+.resultpage-repeattest-button:hover {
+	background: #7420b9;
+	height: 4em;
+	padding: 0 2em;
+	font-size: medium;
+}
+.results-page_answers-text {
+	text-align: center;
+	font-size: 24px;
+	font-weight: 500;
+}
+.results-page_answers-text-header {
+	text-align: center;
+	font-size: 36px;
+	font-weight: 700;
+}

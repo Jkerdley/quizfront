@@ -6,9 +6,10 @@
 	justify-content: space-between;
 	align-items: center;
 	gap: 4em;
-	background: #f0f0f0;
 	border-radius: 1em;
 	padding: 0 1em;
+	background: #f9f9f9;
+	box-shadow: 5px 5px 8px rgba(12, 12, 12, 0.1);
 }
 .story-quiz_true-answers-container {
 	display: flex;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import axios from 'axios';
 import '../pages/styles/EditPage.css';
 import { NewQuestion, QuestionItem } from '../components';
@@ -8,20 +8,15 @@ import { useFetchQuestions } from '../hooks/useFetchQuestions';
 const URL = 'http://localhost:3005/';
 
 export function EditPage() {
-	const [questions, setQuestions] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+	const { questions, error, loading, setQuestions } = useFetchQuestions();
 
-	useFetchQuestions(setQuestions, setError, setLoading);
-
-	// Функция для добавления нового вопроса
 	const handleAddNewQuestion = useCallback((newQuestions) => {
 		setQuestions(() => [...newQuestions]);
 	}, []);
 
 	const handleRemoveQuestion = async (id) => {
 		try {
-			await axios.delete(`http://localhost:3005/${id}`);
+			await axios.delete(`${URL}${id}`);
 			setQuestions(questions.filter((question) => question._id !== id));
 		} catch (error) {
 			console.error('Ошибка при удалении вопроса:', error);
@@ -56,7 +51,7 @@ export function EditPage() {
 				<button className="question-item__button">Вернуться на главную</button>
 			</Link>
 			<NewQuestion onAddNewQuestion={handleAddNewQuestion} />
-			{/* Передаем функцию для добавления вопроса */}
+
 			<h1 className="app__title">Список вопросов</h1>
 			<div className="app__list">
 				{questions.map((question) => {

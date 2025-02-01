@@ -6,19 +6,30 @@ import { useFetchQuestions } from '../hooks/useFetchQuestions';
 import './styles/QuizPage.css';
 
 export const QuizPage = () => {
+	// const { questionId } = useParams();
+	// const navigate = useNavigate();
+	// const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+	// const [questions, setQuestions] = useState([]);
+	// const [error, setError] = useState(false);
+	// const [loading, setLoading] = useState(true);
+	// const [userAnswers, setUserAnswers] = useState({});
+	// const [selectedAnswersMap, setSelectedAnswersMap] = useState({});
+
+	// console.log('Current answers state:', userAnswers);
+	// console.log('Selected answers map:', selectedAnswersMap);
+
+	// useFetchQuestions(setQuestions, setError, setLoading);
+
 	const { questionId } = useParams();
 	const navigate = useNavigate();
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const [questions, setQuestions] = useState([]);
-	const [error, setError] = useState(false);
-	const [loading, setLoading] = useState(true);
 	const [userAnswers, setUserAnswers] = useState({});
 	const [selectedAnswersMap, setSelectedAnswersMap] = useState({});
 
+	const { questions, error, loading } = useFetchQuestions();
+
 	console.log('Current answers state:', userAnswers);
 	console.log('Selected answers map:', selectedAnswersMap);
-
-	useFetchQuestions(setQuestions, setError, setLoading);
 
 	useEffect(() => {
 		if (questions.length > 0) {

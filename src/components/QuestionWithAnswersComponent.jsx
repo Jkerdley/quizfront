@@ -1,4 +1,3 @@
-import { CorrectAnswerIndicator } from './CorrectAnswerIndicator';
 import '../components/styles/QuestionWithAnswersComponent.css';
 import { useEffect, useState } from 'react';
 export const QuestionWithAnswersComponent = ({ question, onAnswer, initialSelectedAnswers = [] }) => {

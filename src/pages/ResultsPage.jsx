@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getQuizAttempts } from '../utils/storage';
+import './styles/ResultPage.css';
 
 export const ResultsPage = () => {
 	const navigate = useNavigate();
@@ -21,18 +22,30 @@ export const ResultsPage = () => {
 
 	return (
 		<div className="results-page">
-			<h2>Результаты последней попытки:</h2>
+			<p className="results-page_answers-text-header">Результаты последней попытки:</p>
 			{results.slice(-1).map((attempt) => (
 				<div key={attempt.storyId}>
-					<p>
-						Правильных ответов: {calculateScore(attempt)}/{attempt.answersStory.length}
-					</p>
-					<p>Дата: {attempt.answersDate}</p>
+					<div className="results-page_answers-text">
+						<p>
+							Правильных ответов: {calculateScore(attempt)}/{attempt.answersStory.length}
+						</p>
+						<p>Дата: {attempt.answersDate}</p>
+					</div>
 				</div>
 			))}
-			<div className="results-buttons">
-				<button onClick={() => navigate('/')}>На главную</button>
-				<button onClick={() => navigate('/quiz/0')}>Пройти тест повторно</button>
+			<div className="resultpage-buttons-cointainer">
+				<button
+					className="question-item__button resultpage-tomainpage-button"
+					onClick={() => navigate('/')}
+				>
+					На главную
+				</button>
+				<button
+					className="question-item__button resultpage-repeattest-button"
+					onClick={() => navigate('/quiz/0')}
+				>
+					Пройти тест повторно
+				</button>
 			</div>
 		</div>
 	);

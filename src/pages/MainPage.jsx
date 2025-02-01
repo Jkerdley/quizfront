@@ -1,8 +1,11 @@
 import './styles/MainPage.css';
 import { StoryQuizContainer, LinkButton } from '../components';
-import { useState } from 'react';
 import { ClearStorageButton } from '../components/ClearStorageButton';
+import { getQuizAttempts } from '../utils';
 export const MainPage = () => {
+	const isThereAnyHistory = getQuizAttempts();
+	console.log('isThereAnyHistory', isThereAnyHistory);
+
 	return (
 		<div className="mainpage-cointainer">
 			<h1>Welcome to QUIZ</h1>
@@ -14,8 +17,12 @@ export const MainPage = () => {
 					Редактировать тест
 				</LinkButton>
 			</div>
-			<StoryQuizContainer />
-			<ClearStorageButton />
+			{isThereAnyHistory && (
+				<>
+					<StoryQuizContainer />
+					<ClearStorageButton />
+				</>
+			)}
 		</div>
 	);
 };
