@@ -7,22 +7,22 @@ import { AddNewAnswerButton } from './AddNewAnswerButton';
 const URL = 'http://localhost:3005/';
 
 export function NewQuestion({ onAddNewQuestion }) {
-	const [title, setTitle] = useState(''); // Заголовок вопроса
-	const [answers, setAnswers] = useState([{ title: '', isTrueAnswer: false }]); // Инициализируем с пустым объектом
+	const [title, setTitle] = useState('');
+	const [answers, setAnswers] = useState([{ title: '', isTrueAnswer: false }]);
 
 	const handleSave = async () => {
 		const question = {
 			title,
 			answers: answers.map((answer) => ({
 				title: answer.title,
-				isTrueAnswer: answer.isTrueAnswer, // Устанавливаем значение isTrueAnswer
+				isTrueAnswer: answer.isTrueAnswer,
 			})),
 		};
 		try {
-			const response = await axios.post(URL, question); // Отправляем POST запрос на сервер
-			onAddNewQuestion(response.data); // Вызываем функцию для обновления списка вопросов
-			setTitle(''); // Сбрасываем заголовок
-			setAnswers([{ title: '', isTrueAnswer: false }]); // Сбрасываем массив ответов
+			const response = await axios.post(URL, question);
+			onAddNewQuestion(response.data);
+			setTitle('');
+			setAnswers([{ title: '', isTrueAnswer: false }]);
 		} catch (error) {
 			console.error('Ошибка при добавлении вопроса:', error);
 		}

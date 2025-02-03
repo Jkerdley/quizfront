@@ -1,4 +1,4 @@
-import './styles/ClearStorageButton.css'; // Создайте файл стилей, если нужно
+import './styles/ClearStorageButton.css';
 import { clearQuizHistory } from '../utils/storage';
 
 export const ClearStorageButton = () => {

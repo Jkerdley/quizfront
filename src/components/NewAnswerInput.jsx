@@ -3,11 +3,11 @@ import './styles/NewAnswerInput.css';
 export const NewAnswerInput = ({ answer, answers, setAnswers, index }) => {
 	const handleNewAnswerChange = (index, value) => {
 		const updatedAnswers = [...answers];
-		updatedAnswers[index].title = value; // Обновляем title в объекте по индексу
+		updatedAnswers[index].title = value;
 		setAnswers(updatedAnswers);
 	};
 	const handleDeleteNewAnswer = (index) => {
-		const updatedAnswers = answers.filter((_, i) => i !== index); // Удаляем ответ по индексу
+		const updatedAnswers = answers.filter((_, i) => i !== index);
 		setAnswers(updatedAnswers);
 	};
 
@@ -20,15 +20,12 @@ export const NewAnswerInput = ({ answer, answers, setAnswers, index }) => {
 				required
 				pattern=".*\S+.*"
 				placeholder="Введите вариант ответа"
-				value={answer.title} // Используем title из объекта
+				value={answer.title}
 				onChange={(e) => handleNewAnswerChange(index, e.target.value)}
 			/>
 			<InputCheckbox index={index} answers={answers} setAnswers={setAnswers} answer={answer} />
 			<label>Ответ правильный?</label>
-			<button
-				className="new-question-item__remove-button"
-				onClick={() => handleDeleteNewAnswer(index)} // Передаем индекс для удаления
-			>
+			<button className="new-question-item__remove-button" onClick={() => handleDeleteNewAnswer(index)}>
 				Удалить
 			</button>
 		</div>

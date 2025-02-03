@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './styles/QuestionItem.css'; // Импортируем стили для QuestionItem
+import './styles/QuestionItem.css';
 import { CorrectAnswerIndicator } from './CorrectAnswerIndicator';
 import { NewAnswerInput } from './NewAnswerInput';
 import { AddNewAnswerButton } from './AddNewAnswerButton';
