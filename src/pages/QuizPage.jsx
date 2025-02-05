@@ -1,36 +1,35 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { saveQuizAttempt } from '../utils';
-import { QuestionWithAnswersComponent, LinkButton } from '../components';
-import { useFetchQuestions } from '../hooks/useFetchQuestions';
+import { QuestionWithAnswersComponent, LinkButton } from '../components'; // Компоненты для рендера вопроса и кнопки-ссылки
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchQuestions } from '../store/actions/quizActions'; // Экшен загрузки вопросов
+import { saveAttempt } from '../store/actions/historyActions'; // Экшен сохранения попытки
 import './styles/QuizPage.css';
 
 export const QuizPage = () => {
-	// const { questionId } = useParams();
-	// const navigate = useNavigate();
-	// const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	// const [questions, setQuestions] = useState([]);
-	// const [error, setError] = useState(false);
-	// const [loading, setLoading] = useState(true);
-	// const [userAnswers, setUserAnswers] = useState({});
-	// const [selectedAnswersMap, setSelectedAnswersMap] = useState({});
-
-	// console.log('Current answers state:', userAnswers);
-	// console.log('Selected answers map:', selectedAnswersMap);
-
-	// useFetchQuestions(setQuestions, setError, setLoading);
-
-	const { questionId } = useParams();
+	const { questionId } = useParams(); // Получаем id вопроса из URL-параметров
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	// Извлекаем вопросы и состояние загрузки из Redux‑store
+	const { questions, loading, error } = useSelector((state) => state.quiz);
+	console.log('questions', questions);
+	console.log('loading', loading);
+	console.log('error', error);
+
+	// Локальное состояние для индекса текущего вопроса, ответа пользователя и выбранных ответов
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const [userAnswers, setUserAnswers] = useState({});
-	const [selectedAnswersMap, setSelectedAnswersMap] = useState({});
+	const [userAnswers, setUserAnswers] = useState({}); // Объект с id вопроса и ответом (true/false)
+	const [selectedAnswersMap, setSelectedAnswersMap] = useState({}); // Выбранные ответы для каждого вопроса
 
-	const { questions, error, loading } = useFetchQuestions();
+	// При первой загрузке, если вопросов нет, загружаем их
+	useEffect(() => {
+		if (questions.length === 0) {
+			dispatch(fetchQuestions());
+		}
+	}, [dispatch, questions.length]);
 
-	console.log('Current answers state:', userAnswers);
-	console.log('Selected answers map:', selectedAnswersMap);
-
+	// Если вопросы загружены, находим индекс вопроса по _id (в URL) и устанавливаем local state
 	useEffect(() => {
 		if (questions.length > 0) {
 			const index = questions.findIndex((question) => question._id === questionId);
@@ -38,40 +37,36 @@ export const QuizPage = () => {
 		}
 	}, [questionId, questions]);
 
+	// Функция обработки ответа на вопрос
 	const handleAnswer = (questionId, isCorrect, selectedAnswers) => {
-		console.log('Question answered:', questionId, 'isCorrect:', isCorrect, 'selected:', selectedAnswers);
-
 		setUserAnswers((prev) => ({
 			...prev,
 			[questionId]: isCorrect,
 		}));
-
 		setSelectedAnswersMap((prev) => ({
 			...prev,
 			[questionId]: selectedAnswers,
 		}));
 	};
 
+	// При завершении теста подготавливаем объект попытки и сохраняем его в историю
 	const handleFinishQuiz = () => {
 		const answersArray = questions.map((question) => {
 			const answer = userAnswers[question._id];
 			return answer === undefined ? null : answer;
 		});
 
-		console.log('Final answers array:', answersArray);
-
 		const attempt = {
-			storyId: Date.now(),
+			storyId: Date.now(), // Временная метка для уникального идентификатора попытки
 			answersStory: answersArray,
 			answersDate: new Date().toLocaleDateString(),
 		};
 
-		console.log('Saving attempt:', attempt);
-		saveQuizAttempt(attempt);
+		dispatch(saveAttempt(attempt));
 		navigate('/quiz/results');
 	};
 
-	if (loading)
+	if (loading || questions.length === 0)
 		return (
 			<div className="edit-page__loader-container">
 				<h3>Загрузка...</h3>
@@ -86,6 +81,7 @@ export const QuizPage = () => {
 
 	return (
 		<div className="quiz-cointainer">
+			{/* Компонент, который отображает текущий вопрос и варианты ответов */}
 			<QuestionWithAnswersComponent
 				question={questions[currentQuestionIndex]}
 				onAnswer={(isCorrect, selectedAnswers) =>
@@ -96,7 +92,11 @@ export const QuizPage = () => {
 			<div className="quiz-buttons-cointainer">
 				<button
 					className="question-item__button mainpage-edit-button"
-					onClick={() => navigate(`/quiz/${questions[currentQuestionIndex - 1]._id}`)}
+					onClick={() =>
+						navigate(
+							`/quiz/${questions[currentQuestionIndex - 1]?._id || questions[currentQuestionIndex]._id}`,
+						)
+					}
 					disabled={currentQuestionIndex === 0}
 				>
 					Предыдущий вопрос

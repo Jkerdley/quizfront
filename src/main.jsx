@@ -1,25 +1,28 @@
-import { createRoot } from 'react-dom/client';
-import './index.css';
-import { Layout } from './Layout.jsx';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { EditPage, MainPage, NotFoundPage, QuizPage, ResultsPage } from './pages/index.js';
+import { createRoot } from 'react-dom/client'; // Импорт функции для создания корневого элемента
+import './index.css'; // Глобальные стили
+import { Layout } from './Layout.jsx'; // Базовая разметка (Layout)
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'; // Импорт роутера
+import { EditPage, MainPage, NotFoundPage, QuizPage, ResultsPage } from './pages/index.js'; // Импорт страниц приложения
+import { store } from './store/store.js'; // Redux‑store
+import { Provider } from 'react-redux'; // Провайдер для работы с Redux
 
+// Создаём роутер с описанием маршрутов приложения
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <Layout />,
+		element: <Layout />, // Обёртка, в которой выводятся дочерние маршруты
 		children: [
-			{ index: true, element: <MainPage /> },
-			{ path: 'edit', element: <EditPage /> },
+			{ index: true, element: <MainPage /> }, // Главная страница
+			{ path: 'edit', element: <EditPage /> }, // Страница редактирования теста
 			{
 				path: 'quiz',
 				children: [
 					{
 						path: ':questionId',
-						element: <QuizPage />,
+						element: <QuizPage />, // Страница теста по id вопроса
 						loader: async ({ params }) => {
 							const questionId = parseInt(params.questionId);
-							// Проверка на всякий случай
+							// Если id некорректный, выбрасываем ошибку 404
 							if (isNaN(questionId) || questionId < 0) {
 								throw new Response('Not Found', { status: 404 });
 							}
@@ -28,14 +31,19 @@ const router = createBrowserRouter([
 					},
 					{
 						path: 'results',
-						element: <ResultsPage />,
+						element: <ResultsPage />, // Страница результатов
 					},
-					{ index: true, element: <QuizPage /> },
+					{ index: true, element: <QuizPage /> }, // Страница теста по умолчанию
 				],
 			},
-			{ path: '*', element: <NotFoundPage /> },
+			{ path: '*', element: <NotFoundPage /> }, // Ошибка 404 для всех неопределённых маршрутов
 		],
 	},
 ]);
 
-createRoot(document.getElementById('root')).render(<RouterProvider router={router} />);
+// Рендеринг приложения в корневой элемент с подключённым Redux‑store
+createRoot(document.getElementById('root')).render(
+	<Provider store={store}>
+		<RouterProvider router={router} />
+	</Provider>,
+);
