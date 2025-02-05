@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getQuizAttempts } from '../utils/storage';
-import './styles/ResultPage.css';
+import './styles/ResultPage.css'; // Стили для страницы результатов
+import { useSelector, useDispatch } from 'react-redux';
+import { loadQuizHistory } from '../store/actions/historyActions'; // Экшен загрузки истории
 
 export const ResultsPage = () => {
 	const navigate = useNavigate();
-	const [results, setResults] = useState([]);
+	const dispatch = useDispatch();
+	// Извлекаем историю попыток из Redux‑store
+	const { attempts } = useSelector((state) => state.history);
 
+	// Загружаем историю из localStorage при монтировании компонента
 	useEffect(() => {
-		const attempts = getQuizAttempts();
-		console.log('Loaded attempts:', attempts);
-		setResults(attempts);
-	}, []);
+		dispatch(loadQuizHistory());
+	}, [dispatch]);
 
+	// Функция для расчёта результата теста
 	const calculateScore = (attempt) => {
 		const correctAnswers = attempt.answersStory.filter((a) => a === true).length;
 		const totalQuestions = attempt.answersStory.length;
@@ -23,7 +26,7 @@ export const ResultsPage = () => {
 	return (
 		<div className="results-page">
 			<p className="results-page_answers-text-header">Результаты последней попытки:</p>
-			{results.slice(-1).map((attempt) => (
+			{attempts.slice(-1).map((attempt) => (
 				<div key={attempt.storyId}>
 					<div className="results-page_answers-text">
 						<p>

@@ -1,36 +1,18 @@
-import { useCallback } from 'react';
-import axios from 'axios';
-import '../pages/styles/EditPage.css';
-import { NewQuestion, QuestionItem } from '../components';
+import '../pages/styles/EditPage.css'; // Стили для страницы редактирования
+import { NewQuestion, QuestionItem } from '../components'; // Компоненты для добавления и редактирования вопросов
 import { Link } from 'react-router-dom';
-import { useFetchQuestions } from '../hooks/useFetchQuestions';
-
-const URL = 'http://localhost:3005/';
+import { fetchQuestions } from '../store/actions/quizActions'; // Экшен загрузки вопросов
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 export function EditPage() {
-	const { questions, error, loading, setQuestions } = useFetchQuestions();
+	const dispatch = useDispatch();
+	const { questions, error, loading } = useSelector((state) => state.quiz);
 
-	const handleAddNewQuestion = useCallback((newQuestions) => {
-		setQuestions(() => [...newQuestions]);
-	}, []);
-
-	const handleRemoveQuestion = async (id) => {
-		try {
-			await axios.delete(`${URL}${id}`);
-			setQuestions(questions.filter((question) => question._id !== id));
-		} catch (error) {
-			console.error('Ошибка при удалении вопроса:', error);
-		}
-	};
-
-	const handleEditQuestion = async (id, newTitle, newAnswers) => {
-		await axios.put(`${URL}${id}`, { title: newTitle, answers: newAnswers });
-		setQuestions(
-			questions.map((question) =>
-				question._id === id ? { ...question, title: newTitle, answers: newAnswers } : question,
-			),
-		);
-	};
+	// При монтировании компонента загружаем вопросы с сервера
+	useEffect(() => {
+		dispatch(fetchQuestions());
+	}, [dispatch]);
 
 	if (loading)
 		return (
@@ -50,18 +32,18 @@ export function EditPage() {
 			<Link to="/">
 				<button className="question-item__button">Вернуться на главную</button>
 			</Link>
-			<NewQuestion onAddNewQuestion={handleAddNewQuestion} />
+
+			{/* Компонент для добавления нового вопроса */}
+			<NewQuestion />
 
 			<h1 className="app__title">Список вопросов</h1>
 			<div className="app__list">
-				{questions.map((question) => {
-					let isDeleteDisabled = questions.length < 2 ? true : false;
+				{questions.map((question, index) => {
+					const isDeleteDisabled = questions.length < 2;
 					return (
 						<QuestionItem
-							key={question._id}
+							key={question._id || index}
 							question={question}
-							onRemove={handleRemoveQuestion}
-							onEdit={handleEditQuestion}
 							isDisabled={isDeleteDisabled}
 						/>
 					);

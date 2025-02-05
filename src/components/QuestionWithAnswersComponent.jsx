@@ -1,37 +1,36 @@
 import '../components/styles/QuestionWithAnswersComponent.css';
 import { useEffect, useState } from 'react';
+
 export const QuestionWithAnswersComponent = ({ question, onAnswer, initialSelectedAnswers = [] }) => {
 	const [selectedAnswers, setSelectedAnswers] = useState(initialSelectedAnswers);
 
+	// Сброс выбранных ответов, если изменился вопрос
 	useEffect(() => {
 		setSelectedAnswers(initialSelectedAnswers);
 	}, [question?._id, initialSelectedAnswers]);
 
-	console.log('Current question:', question?._id, 'Selected answers:', selectedAnswers);
-
+	// Обработчик изменения состояния чекбокса для ответа
 	const handleCheck = (answerId, isChecked) => {
-		console.log('Checkbox changed:', answerId, isChecked);
-
+		// Обновление выбранных ответов
 		const newSelected = isChecked
 			? [...selectedAnswers, answerId]
 			: selectedAnswers.filter((id) => id !== answerId);
 
-		console.log('New selected answers:', newSelected);
 		setSelectedAnswers(newSelected);
 
+		// Если выбран хотя бы один ответ, проверяем корректность
 		if (newSelected.length > 0) {
+			// Получаем _id правильных ответов из вопроса
 			const correctAnswers = question.answers.filter((a) => a.isTrueAnswer).map((a) => a._id);
 
-			console.log('Correct answers:', correctAnswers);
+			// Сравниваем массивы
+			const arraysEqual =
+				newSelected.length === correctAnswers.length &&
+				[...newSelected].sort().every((val, idx) => val === [...correctAnswers].sort()[idx]);
 
-			const arraysEqual = (a, b) =>
-				a.length === b.length && [...a].sort().every((val, idx) => val === [...b].sort()[idx]);
-
-			const isCorrect = arraysEqual(newSelected, correctAnswers);
-			console.log('Is answer correct:', isCorrect);
+			const isCorrect = arraysEqual;
 			onAnswer(isCorrect, newSelected);
 		} else {
-			console.log('No answers selected, sending null');
 			onAnswer(null, []);
 		}
 	};
@@ -40,6 +39,7 @@ export const QuestionWithAnswersComponent = ({ question, onAnswer, initialSelect
 		<div className="quiz_question-item__container">
 			<span className="quiz-question-item__title">{question.title}</span>
 			<div>
+				{/* Перебор вариантов ответов */}
 				{question.answers.map((answer) => (
 					<label key={answer._id} className="quiz-answer-in-list">
 						<input

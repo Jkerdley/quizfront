@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import './styles/NewQuestion.css';
-import axios from 'axios';
 import { NewAnswerInput } from './NewAnswerInput';
 import { AddNewAnswerButton } from './AddNewAnswerButton';
+import { useDispatch } from 'react-redux';
+import { addQuestion } from '../store/actions/quizActions';
 
-const URL = 'http://localhost:3005/';
-
-export function NewQuestion({ onAddNewQuestion }) {
-	const [title, setTitle] = useState('');
+export function NewQuestion() {
+	const dispatch = useDispatch();
+	const [title, setTitle] = useState(''); // Локальное состояние для текста вопроса
+	// Инициализация состояния с одним пустым вариантом ответа
 	const [answers, setAnswers] = useState([{ title: '', isTrueAnswer: false }]);
 
+	// Обработчик сохранения нового вопроса
 	const handleSave = async () => {
 		const question = {
 			title,
@@ -18,14 +20,10 @@ export function NewQuestion({ onAddNewQuestion }) {
 				isTrueAnswer: answer.isTrueAnswer,
 			})),
 		};
-		try {
-			const response = await axios.post(URL, question);
-			onAddNewQuestion(response.data);
-			setTitle('');
-			setAnswers([{ title: '', isTrueAnswer: false }]);
-		} catch (error) {
-			console.error('Ошибка при добавлении вопроса:', error);
-		}
+		dispatch(addQuestion(question)); // Диспатчим экшен добавления вопроса
+		// Очистка полей после сохранения
+		setTitle('');
+		setAnswers([{ title: '', isTrueAnswer: false }]);
 	};
 
 	return (
@@ -48,13 +46,14 @@ export function NewQuestion({ onAddNewQuestion }) {
 			<div className="new-question-item__answers-container">
 				{answers.map((answer, index) => (
 					<NewAnswerInput
-						key={index}
+						key={index} // Индекс используется в качестве ключа, так как new answer пока не имеет _id
 						index={index}
 						answer={answer}
 						answers={answers}
 						setAnswers={setAnswers}
 					/>
 				))}
+				{/* Кнопка для добавления нового варианта ответа */}
 				<AddNewAnswerButton setAnswers={setAnswers} answers={answers} />
 			</div>
 		</div>
