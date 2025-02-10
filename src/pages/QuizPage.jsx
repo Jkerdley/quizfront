@@ -14,28 +14,31 @@ export const QuizPage = () => {
 	// Извлекаем вопросы и состояние загрузки из Redux‑store
 	const { questions, loading, error } = useSelector((state) => state.quiz);
 	console.log('questions', questions);
-	console.log('loading', loading);
-	console.log('error', error);
 
 	// Локальное состояние для индекса текущего вопроса, ответа пользователя и выбранных ответов
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [userAnswers, setUserAnswers] = useState({}); // Объект с id вопроса и ответом (true/false)
 	const [selectedAnswersMap, setSelectedAnswersMap] = useState({}); // Выбранные ответы для каждого вопроса
 
+	//TODO: удалить лишний useEffect и разобраться с двойным рендерингом
+
 	// При первой загрузке, если вопросов нет, загружаем их
+	// useEffect(() => {
+	// 	if (questions.length === 0) {
+	// 		dispatch(fetchQuestions());
+	// 	}
+	// }, [dispatch, questions.length]);
+
+	// Если вопросы загружены, находим индекс вопроса по _id (в URL) и устанавливаем local state
 	useEffect(() => {
 		if (questions.length === 0) {
 			dispatch(fetchQuestions());
 		}
-	}, [dispatch, questions.length]);
-
-	// Если вопросы загружены, находим индекс вопроса по _id (в URL) и устанавливаем local state
-	useEffect(() => {
 		if (questions.length > 0) {
 			const index = questions.findIndex((question) => question._id === questionId);
 			setCurrentQuestionIndex(index !== -1 ? index : 0);
 		}
-	}, [questionId, questions]);
+	}, [questionId]);
 
 	// Функция обработки ответа на вопрос
 	const handleAnswer = (questionId, isCorrect, selectedAnswers) => {

@@ -1,10 +1,19 @@
 import './styles/MainPage.css';
 import { StoryQuizContainer, LinkButton } from '../components';
 import { ClearStorageButton } from '../components/ClearStorageButton';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadQuizHistory } from '../store/actions/historyActions';
+import { useEffect } from 'react';
 
 export const MainPage = () => {
+	const dispatch = useDispatch();
 	const { attempts } = useSelector((state) => state.history);
+	console.log('attempts', attempts);
+	//FIXME: двойной рендеринг
+	useEffect(() => {
+		dispatch(loadQuizHistory());
+	}, [dispatch]);
+
 	const isThereAnyHistory = attempts.length > 0;
 
 	return (
